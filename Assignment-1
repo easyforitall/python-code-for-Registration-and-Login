@@ -1,0 +1,72 @@
+import re
+def choices():
+    choice = int(input("For Registration Type 1 and For Login Type 2: "))
+    if choice == 1:
+       return registration()
+    elif choice == 2:
+        return login()
+    else:
+       raise TypeError
+def registration():
+    db = open("file2.txt",'r')
+    e = []
+    f = []
+    for i in db:
+        c,b = i.split(",")
+        b = b.strip()
+        e.append(c)
+        f.append(b)
+    data = dict(zip(e, f))
+    username = input("Enter the username:")
+    regex1 = "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
+    if not re.fullmatch(regex1,username):
+        print("please enter the valid username")
+        registration()
+    else:
+        if username in e:
+            print("username exists")
+            registration()
+        else:
+            password = input("Enter the password:")
+            regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,16}$"
+            while not re.fullmatch(regex,password):
+                print("Enter the valid password")
+                password = input("Enter the password:")
+            else:
+                db = open("file2.txt","a")
+                db.write(username+","+password+"\n")
+                print("Registration successful")
+                db.close()
+    print(choices())
+def login():
+    db = open("file2.txt", 'r')
+    e = []
+    f = []
+    for i in db:
+        c,b = i.split(",")
+        b = b.strip()
+        e.append(c)
+        f.append(b)
+    data = dict(zip(e, f))
+    username = input("Enter the username:")
+    while not username in e:
+        print("username doesn't exist go for registration")
+        registration()
+    else:
+        option = int(input("Enter 1 to enter password 2 if you forget password:"))
+        if option==1:
+            password = input("Enter the password:")
+            while not password in data[username]:
+                print("Enter the correct password")
+                password = input("Enter the password:")
+            else:
+                print("Loginsuccessful")
+        elif option==2:
+            print("password" + "=" + data[username])
+            print("Loginsuccessful")
+        else:
+            print("please enter the correct option")
+print(choices())
+
+
+
